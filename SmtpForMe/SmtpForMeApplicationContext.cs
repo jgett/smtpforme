@@ -11,16 +11,16 @@ namespace SmtpForMe
 {
     public class SmtpForMeApplicationContext : ApplicationContext
     {
-        private NotifyIcon trayIcon;
+        private NotifyIcon _trayIcon;
 
         private IDisposable _webapp;
 
         public SmtpForMeApplicationContext()
         {
             // Initialize Tray Icon
-            trayIcon = new NotifyIcon()
+            _trayIcon = new NotifyIcon()
             {
-                Icon = Resources.SmtpForMe,
+                Icon = Resources.SmtpForMeIcon,
                 ContextMenu = new ContextMenu(new MenuItem[]
                 {
                     new MenuItem("Exit", Exit)
@@ -29,7 +29,7 @@ namespace SmtpForMe
                 Text = "SmtpForMe"
             };
 
-            trayIcon.MouseClick += (s, e) =>
+            _trayIcon.MouseClick += (s, e) =>
             {
                 if (e.Button == MouseButtons.Left)
                 {
@@ -62,16 +62,10 @@ namespace SmtpForMe
             await smtpServer.StartAsync(CancellationToken.None);
         }
 
-        private void TrayIcon_Click(object sender, EventArgs e)
-        {
-            Form1 form1 = new Form1() { Context = this };
-            form1.Show();
-        }
-
         public void Exit(object sender, EventArgs e)
         {
             // Hide tray icon, otherwise it will remain shown until user mouses over it
-            trayIcon.Visible = false;
+            _trayIcon.Visible = false;
             Application.Exit();
         }
 

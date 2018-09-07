@@ -63,9 +63,9 @@ namespace SmtpForMe.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon SmtpForMe {
+        internal static System.Drawing.Icon SmtpForMeIcon {
             get {
-                object obj = ResourceManager.GetObject("SmtpForMe", resourceCulture);
+                object obj = ResourceManager.GetObject("SmtpForMeIcon", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

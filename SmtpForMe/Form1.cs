@@ -13,7 +13,7 @@ namespace SmtpForMe
         public Form1()
         {
             InitializeComponent();
-            Icon = Resources.SmtpForMe;
+            Icon = Resources.SmtpForMeIcon;
         }
 
         private void Form1_Load(object sender, EventArgs e)
