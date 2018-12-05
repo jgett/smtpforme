@@ -1,4 +1,5 @@
-﻿using SmtpForMe.Models;
+﻿using Microsoft.AspNet.SignalR;
+using SmtpForMe.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -22,14 +23,30 @@ namespace SmtpForMe.Controllers
         [Route("api/messages")]
         public IEnumerable<MessageModel> GetMessages()
         {
-            var messages = SmtpForMeMessageStore.Messages.Select(x => x.Value).ToArray();
-            return messages.OrderByDescending(x => x.ReceivedOn);
+            var result = MessageManager.GetMessages();
+            return result;
+        }
+
+        [Route("api/messages")]
+        public bool DeleteMessages()
+        {
+            var result = MessageManager.DeleteAll();
+            if (result) RefreshAll();
+            return result;
+        }
+
+        [Route("api/message/{id}")]
+        public MessageModel GetMessage(string id)
+        {
+            var result = MessageManager.GetMessage(id);
+            return result;
         }
 
         [Route("api/message/{id}")]
         public bool DeleteMessage(string id)
         {
-            var result = SmtpForMeMessageStore.Messages.TryRemove(id, out MessageModel value);
+            var result = MessageManager.DeleteMessage(id);
+            if (result) RefreshAll();
             return result;
         }
 
@@ -55,6 +72,12 @@ namespace SmtpForMe.Controllers
             var response = Request.CreateResponse(HttpStatusCode.Redirect);
             response.Headers.Location = new Uri(ConfigurationManager.AppSettings["WebServiceHost"]);
             return response;
+        }
+
+        private void RefreshAll()
+        {
+            IHubContext hub = GlobalHost.ConnectionManager.GetHubContext<MessageHub>();
+            hub.Clients.All.refresh(MessageManager.GetMessages());
         }
     }
 }

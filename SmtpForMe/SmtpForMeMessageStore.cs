@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNet.SignalR;
-using MimeKit;
-using SmtpForMe.Controllers;
+﻿using MimeKit;
 using SmtpForMe.Models;
 using SmtpServer;
 using SmtpServer.Mail;
 using SmtpServer.Protocol;
 using SmtpServer.Storage;
 using System;
-using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,13 +12,6 @@ namespace SmtpForMe
 {
     public class SmtpForMeMessageStore : MessageStore
     {
-        public static ConcurrentDictionary<string, MessageModel> Messages { get; }
-
-        static SmtpForMeMessageStore()
-        {
-            Messages = new ConcurrentDictionary<string, MessageModel>();
-        }
-
         public override Task<SmtpResponse> SaveAsync(ISessionContext context, IMessageTransaction transaction, CancellationToken cancellationToken)
         {
             var id = Guid.NewGuid().ToString("n");
@@ -42,10 +32,7 @@ namespace SmtpForMe
                 ReceivedOn = receivedOn
             };
 
-            Messages.TryAdd(id, model);
-
-            var signalr = GlobalHost.ConnectionManager.GetHubContext<MessageHub>();
-            signalr.Clients.All.newMessage(model);
+            MessageManager.AddMessage(model);
 
             return Task.FromResult(SmtpResponse.Ok);
         }

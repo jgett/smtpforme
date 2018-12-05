@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNet.SignalR;
-using SmtpForMe.Models;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SmtpForMe.Controllers
@@ -9,36 +7,36 @@ namespace SmtpForMe.Controllers
     {
         public override Task OnConnected()
         {
-            Refresh();
+            RefreshCaller();
             return base.OnConnected();
         }
 
         public override Task OnReconnected()
         {
-            Refresh();
+            RefreshCaller();
             return base.OnReconnected();
-        }
-
-        public void Refresh()
-        {
-            Clients.Caller.refresh(GetMessages());
-        }
-
-        public void DeleteMessage(string id)
-        {
-            SmtpForMeMessageStore.Messages.TryRemove(id, out MessageModel value);
-            Clients.All.refresh(GetMessages());
         }
 
         public void DeleteAll()
         {
-            SmtpForMeMessageStore.Messages.Clear();
-            Clients.All.refresh(GetMessages());
+            if (MessageManager.DeleteAll())
+                RefreshAll();
         }
 
-        private MessageModel[] GetMessages()
+        public void DeleteMessage(string id)
         {
-            return SmtpForMeMessageStore.Messages.Select(x => x.Value).OrderByDescending(x => x.ReceivedOn).ToArray();
+            if (MessageManager.DeleteMessage(id))
+                RefreshAll();
+        }
+
+        private void RefreshAll()
+        {
+            Clients.All.refresh(MessageManager.GetMessages());
+        }
+
+        private void RefreshCaller()
+        {
+            Clients.Caller.refresh(MessageManager.GetMessages());
         }
     }
 }
