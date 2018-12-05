@@ -1,3 +1,4 @@
+// SmtpForMe user interface
 (function($){
 	$.fn.smtpforme = function(options){
 		return this.each(function(){
