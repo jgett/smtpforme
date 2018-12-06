@@ -53,13 +53,27 @@ namespace SmtpForMe.Controllers
         [HttpGet, Route("")]
         public HttpResponseMessage Index()
         {
-            var content = File.ReadAllText("index.html");
+            string content = string.Empty;
 
-            var response = new HttpResponseMessage
+            string fileUrl = ConfigurationManager.AppSettings["UserInterfaceUri"];
+
+            HttpResponseMessage response;
+
+            if (fileUrl == ConfigurationManager.AppSettings["WebServiceHost"])
             {
-                Content = new StringContent(content)
-            };
+                // this will cause an endless loop.
+                response = new HttpResponseMessage { Content = new StringContent("Invalid AppSettings in App.config: UserInterfaceUri and WebServiceHost must not be the same.") };
+                response.StatusCode = HttpStatusCode.InternalServerError;
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+                return response;
+            }
 
+            using (var wc = new WebClient())
+            {
+                content = wc.DownloadString(fileUrl);
+            }
+
+            response = new HttpResponseMessage { Content = new StringContent(content) };
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
 
             return response;

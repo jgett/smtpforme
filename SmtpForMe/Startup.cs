@@ -1,4 +1,6 @@
-﻿using Owin;
+﻿using Microsoft.AspNet.SignalR;
+using Microsoft.Owin.Cors;
+using Owin;
 using System.Web.Http;
 
 namespace SmtpForMe
@@ -10,7 +12,13 @@ namespace SmtpForMe
             HttpConfiguration config = new HttpConfiguration();
             config.MapHttpAttributeRoutes();
             app.UseWebApi(config);
-            app.MapSignalR();
+
+            app.Map("/signalr", map =>
+            {
+                map.UseCors(CorsOptions.AllowAll);
+                var hubConfig = new HubConfiguration();
+                map.RunSignalR(hubConfig);
+            });
         }
     }
 }
