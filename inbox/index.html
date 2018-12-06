@@ -125,7 +125,17 @@
     <script src="https://jgett.github.io/smtpforme/inbox/js/smtpforme.js"></script>
 
     <script>
-        $(".smtpforme").smtpforme();
+        // Allow passing in the signalr host url via the querystring. This is the
+        // host and port of the computer running SmtpForMe. For example, for
+        // http://127.0.0.1:4856, the full url with encoded querystring should be
+        // https://jgett.github.io/smtpforme/inbox/?host=http%3A%2F%2F127.0.0.1%3A4856
+        // SmtpForMe uses CORS so the page can use a local service at 127.0.0.1 even
+        // when it is running at jgett.github.io. This page is also hosted locally by
+        // the SmtpForMe web service.
+        
+        var host = URI().search(true).host;
+        var opts = (host) ? {'host':host} : null;
+        $(".smtpforme").smtpforme(opts);
     </script>
 </body>
 </html>
