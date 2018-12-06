@@ -8,6 +8,8 @@
 			
 			var started = false;
 			
+			console.log(opts);
+			
 			var signalrPath = (opts.host.endsWith('/') ? '' : '/') + 'signalr'
 			var hubUrl = opts.host + signalrPath;
 			
