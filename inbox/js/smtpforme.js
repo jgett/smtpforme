@@ -4,9 +4,14 @@
 		return this.each(function(){
 			var $this = $(this);
 
+			var opts = $.extend({}, {'host': 'http://127.0.0.1:4856'}, options, $this.data());
+			
 			var started = false;
 			
-			$.connection.hub.url = 'http://127.0.0.1:4856/signalr';
+			var signalrPath = (opts.host.endsWith('/') ? '' : '/') + 'signalr'
+			var hubUrl = opts.host + signalrPath;
+			
+			$.connection.hub.url = hubUrl;
 			
 			var message = $.connection.messageHub;
 			
