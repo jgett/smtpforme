@@ -6,6 +6,8 @@
 
 			var started = false;
 			
+			$.connection.hub.url = 'http://127.0.0.1:4856/signalr';
+			
 			var message = $.connection.messageHub;
 			
 			$this.on('click', '.delete-all', function(e){
