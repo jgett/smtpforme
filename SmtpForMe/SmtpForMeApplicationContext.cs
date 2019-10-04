@@ -2,7 +2,7 @@
 using SmtpForMe.Properties;
 using SmtpServer;
 using System;
-using System.Configuration;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -23,6 +23,7 @@ namespace SmtpForMe
                 Icon = Resources.SmtpForMeIcon,
                 ContextMenu = new ContextMenu(new MenuItem[]
                 {
+                    new MenuItem("About", About),
                     new MenuItem("Exit", Exit)
                 }),
                 Visible = true,
@@ -33,14 +34,13 @@ namespace SmtpForMe
             {
                 if (e.Button == MouseButtons.Left)
                 {
-                    var form1 = new Form1() { Context = this };
-                    form1.Show();
+                    Process.Start(Settings.GetUserInterfaceUri());
                 }
             };
 
-            var webServiceHost = GetRequiredSettingAsString("WebServiceHost");
-            var smtpServiceHost = GetRequiredSettingAsString("SmtpServiceHost");
-            var smtpServicePort = GetRequiredSettingAsInt32("SmtpServicePort");
+            var webServiceHost = Settings.GetWebServiceHost();
+            var smtpServiceHost = Settings.GetSmtpServiceHost();
+            var smtpServicePort = Settings.GetSmtpServicePort();
 
             _webapp = WebApp.Start<Startup>(webServiceHost);
 
@@ -62,31 +62,18 @@ namespace SmtpForMe
             await smtpServer.StartAsync(CancellationToken.None);
         }
 
+
+        public void About(object sender, EventArgs e)
+        {
+            var form1 = new Form1() { Context = this };
+            form1.Show();
+        }
+
         public void Exit(object sender, EventArgs e)
         {
             // Hide tray icon, otherwise it will remain shown until user mouses over it
             _trayIcon.Visible = false;
             Application.Exit();
-        }
-
-        private string GetRequiredSettingAsString(string key)
-        {
-            string value = ConfigurationManager.AppSettings[key];
-
-            if (string.IsNullOrEmpty(value))
-                throw new Exception($"Missing required AppSetting: {key}");
-
-            return value;
-        }
-
-        private int GetRequiredSettingAsInt32(string key)
-        {
-            string value = GetRequiredSettingAsString(key);
-
-            if (!int.TryParse(value, out int result))
-                throw new Exception($"{key} must be an integer.");
-
-            return result;
         }
     }
 }

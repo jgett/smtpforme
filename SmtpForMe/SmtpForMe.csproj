@@ -53,6 +53,8 @@
     <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\MessageHub.cs" />
     <Compile Include="MessageManager.cs" />
+    <Compile Include="Models\AttachmentModel.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="SmtpForMeMessageStore.cs" />
     <Compile Include="SmtpForMeApplicationContext.cs" />
     <Compile Include="Form1.cs">

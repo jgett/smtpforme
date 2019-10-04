@@ -100,10 +100,16 @@
                                         <p class="form-control-static" data-property="Subject"></p>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">Attachments</label>
+                                    <div class="col-sm-10">
+                                        <p class="form-control-static attachments"></p>
+                                    </div>
+                                </div>
                             </div>
                             <div class="body">
                                 <div data-property="HtmlBody"></div>
-                                <div data-property="TextBody"></div>
+                                <div data-property="TextBody" style="white-space: pre;"></div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -121,7 +127,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/signalr@2.3.0/jquery.signalR.min.js"></script>
-    <script src="https://jgett.github.io/smtpforme/inbox/js/smtpforme.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js"></script>
+    <script src="js/smtpforme.js"></script>
 
     <script>
         // Allow passing in the signalr host url via the querystring. This is the

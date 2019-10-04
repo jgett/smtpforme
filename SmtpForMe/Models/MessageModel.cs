@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SmtpForMe.Models
 {
@@ -10,6 +11,7 @@ namespace SmtpForMe.Models
         public string Subject { get; set; }
         public string TextBody { get; set; }
         public string HtmlBody { get; set; }
+        public IEnumerable<AttachmentModel> Attachments { get; set; }
         public DateTime ReceivedOn { get; set; }
     }
 }
